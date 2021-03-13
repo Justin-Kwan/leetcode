@@ -1,7 +1,7 @@
 import java.util.HashMap;
 import java.util.ArrayList;
 
-public class HelloWorld{
+public class HelloWorld {
     
     // 1. reverse letters in a word (done)
     // 2. Reverse words in a sertence ()
