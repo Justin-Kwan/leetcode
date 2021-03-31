@@ -29,7 +29,7 @@ class Solution:
         currUniqueChars = set()
         
         while rightPtr < len(s):
-            
+
             if s[rightPtr] not in currUniqueChars:
                 currUniqueChars.add(s[rightPtr])
                 rightPtr += 1
