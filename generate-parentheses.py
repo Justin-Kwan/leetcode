@@ -48,9 +48,10 @@ class Solution:
             return
         
         # check enough left bracket to accomodate new right bracket
-        if leftCount >= rightCount + 1:
+        if leftCount > rightCount:
             self.recurseGenerateParenthesis(parenthesisSoFar + ')', generatedParenthesis, leftCount, rightCount + 1, n)
-        
+
         # check not all left bracket used before adding new left bracket
         if leftCount < n:
-              self.recurseGenerateParenthesis(parenthesisSoFar + '(', generatedParenthesis, leftCount + 1, rightCount, n)
+            self.recurseGenerateParenthesis(parenthesisSoFar + '(', generatedParenthesis, leftCount + 1, rightCount, n)
+
