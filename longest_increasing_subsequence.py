@@ -17,7 +17,8 @@ class Solution:
 
         return maxLIS
     
-    # finds LIS out of all elements to left of currNum at toIndex and less than currNum (for currNum to succeed in increasing sequence)
+    # finds LIS out of all elements to left of currNum at toIndex and less than currNum
+    # (for currNum to succeed in increasing sequence)
     def findLISBefore(self, currNum: int, fromIndex: int, toIndex: int, nums: List[int], LISUpToNums: List[int]) -> int:
         # non empty sublist has at least 1 subsequence
         maxLISBeforeCurr = 0
