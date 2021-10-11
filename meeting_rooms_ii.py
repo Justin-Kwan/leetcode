@@ -12,7 +12,7 @@ class Solution:
             else:
                 heapq.heappush(roomExpiries, interval[1])       # checkout new room and add expiry
         return len(roomExpiries)
-    
+
 #     # unoptimized track room expiries in list
 #     def minMeetingRooms(self, intervals: List[List[int]]) -> int:
 #         roomExpiries = []
