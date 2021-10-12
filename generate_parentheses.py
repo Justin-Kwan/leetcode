@@ -35,23 +35,28 @@ class Solution:
 #         # when too many opening brackets
 #         return openingBracketCount == 0
 
-    # optimal backtracking
+    # optimal dfs
     def generateParenthesis(self, n: int) -> List[str]:
-        generatedParenthesis = []
-        self.recurseGenerateParenthesis('(', generatedParenthesis, 1, 0, n)
-        return generatedParenthesis
-    
-    def recurseGenerateParenthesis(self, parenthesisSoFar: str, generatedParenthesis: List[str], leftCount: int, rightCount: int, n: int):
+        parenthesisCombos = []
+        self.generateParenthesisCombos("", n, n, parenthesisCombos)
+        return parenthesisCombos
 
-        if leftCount == n and rightCount == n:
-            generatedParenthesis.append(parenthesisSoFar)
+    def generateParenthesisCombos(self, currCombo: str, openingLeft: int, closingLeft: int, combos: List[str]):        
+        # reached valid parenthesis permutation
+        if openingLeft == 0 and closingLeft == 0:
+            combos.append(currCombo)
             return
-        
-        # check enough left bracket to accomodate new right bracket
-        if leftCount > rightCount:
-            self.recurseGenerateParenthesis(parenthesisSoFar + ')', generatedParenthesis, leftCount, rightCount + 1, n)
 
-        # check not all left bracket used before adding new left bracket
-        if leftCount < n:
-            self.recurseGenerateParenthesis(parenthesisSoFar + '(', generatedParenthesis, leftCount + 1, rightCount, n)
+        # can explore by opening a new parenthesis
+        if openingLeft > 0:
+            self.generateParenthesisCombos(currCombo + '(',
+                                           openingLeft - 1,
+                                           closingLeft,
+                                           combos)
 
+        # check that a closing parenthesis can accomodate an opening one
+        if closingLeft > openingLeft:
+            self.generateParenthesisCombos(currCombo + ')',
+                                           openingLeft,
+                                           closingLeft - 1,
+                                           combos)  
