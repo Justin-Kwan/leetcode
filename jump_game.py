@@ -1,4 +1,17 @@
 class Solution:
+    # optimized greedy/bottom up dp
+    def canJump(self, nums: List[int]) -> bool:
+        linkToEnd = len(nums) - 1
+
+        # can each previous element reach latest link to end
+        for i in range(len(nums) - 1, -1, -1):
+            # if (previous index + jump count) can reach linkToEnd
+            if i + nums[i] >= linkToEnd:
+                linkToEnd = i
+
+        return linkToEnd == 0
+
+
 #     # optimized (memoized) top down dp
 #     def canJump(self, maxJumpLengths: List[int]) -> bool:
 #         if len(maxJumpLengths) == 1:
@@ -23,21 +36,3 @@ class Solution:
 
 #         unreachableFromIndexes.add(fromIndex)
 #         return False
-
-    # optimized greedy
-    def canJump(self, maxJumpLengths: List[int]) -> bool:
-        if not maxJumpLengths:
-            return True
-
-        endIndex = len(maxJumpLengths) - 1
-        currIndexReachingEnd = endIndex
-
-        for i in range(endIndex, -1, -1):
-            maxJumpIndex = i + maxJumpLengths[i]
-
-            # if ith index can jump to current index that can reach end,
-            # then ith index can reach end
-            if currIndexReachingEnd <= maxJumpIndex:
-                currIndexReachingEnd = i
-
-        return True if currIndexReachingEnd == 0 else False
