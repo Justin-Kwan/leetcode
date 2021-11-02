@@ -1,15 +1,19 @@
 class Solution:
     # optimal
     def maxSubArray(self, nums: List[int]) -> int:
-        # first element could be max sum subarray
+        if not nums:
+            return 0
+ 
+        # first element could be max sum subarray,
         # will be replaced on next iteration if not
         maxSumSoFar = nums[0]
-        currMaxSum = nums[0]
+        maxSumAtCurr = nums[0]
 
         for i in range(1, len(nums)):
-            currMaxSum = max(currMaxSum + nums[i], nums[i])
+            # update local max sum up to current
+            # (previous max sum + current or current itself)
+            maxSumAtCurr = max(nums[i] + maxSumAtCurr, nums[i])
+            # update global max sum
+            maxSumSoFar = max(maxSumSoFar, maxSumAtCurr)
 
-            if currMaxSum > maxSumSoFar:
-                maxSumSoFar = currMaxSum
-                
         return maxSumSoFar

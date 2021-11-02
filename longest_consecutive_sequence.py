@@ -1,4 +1,26 @@
 class Solution:
+    # optimized iterative
+    def longestConsecutive(self, nums: List[int]) -> int:
+        numbers = set(nums)
+        maxConsecutiveCount = 0
+
+        # find max consecutive increase sequence count by counting
+        # sequence values in contiguous blocks
+        for num in nums:
+            # current number starts new sequence since previous not in list (gap)
+            if num - 1 not in numbers:
+                consecutiveCount = 0
+
+                # keep checking next sequence value so long as it exists
+                while num in numbers:
+                    consecutiveCount += 1
+                    num += 1
+
+                maxConsecutiveCount = max(consecutiveCount, maxConsecutiveCount)
+
+        return maxConsecutiveCount
+
+
 #     # optimized top down dp memoized
 #     def longestConsecutive(self, nums: List[int]) -> int:
 #         numsByConsecutiveCount = {}
@@ -32,26 +54,3 @@ class Solution:
 #         numsByConsecutiveCount[num] = currConsecutiveCount
 
 #         return currConsecutiveCount
-
-    # optimized iterative
-    def longestConsecutive(self, nums: List[int]) -> int:
-        numbers = set(nums)
-        maxConsecutiveCount = 0
-
-        # find max consecutive increase sequence count by counting
-        # sequence values in contiguous blocks
-        for num in nums:
-            if num - 1 in numbers:
-                continue
-
-            # current number starts new sequence since previous not in list (gap)
-
-            currConsecutiveCount = 1
-
-            # keep checking next sequence value so long as it exists
-            while num + currConsecutiveCount in numbers:
-                currConsecutiveCount += 1
-
-            maxConsecutiveCount = max(currConsecutiveCount, maxConsecutiveCount)
-
-        return maxConsecutiveCount
