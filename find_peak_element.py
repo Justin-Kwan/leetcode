@@ -5,7 +5,7 @@ class Solution:
         rightPtr = len(nums) - 1
 
         while leftPtr < rightPtr:
-            # center pointer will never be at first or last index
+            # center pointer can never go out of range (< 0 or > length)
             centerPtr = (leftPtr + rightPtr) // 2
 
             # center pointer at local peak
