@@ -5,38 +5,6 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    maxConsecutiveLength = 0
-
-    # simplified bottom up dfs, non thread safe
-    def longestConsecutive(self, root: Optional[TreeNode]) -> int:
-        if not root:
-            return 0
-
-        self.findLongestConsecutive(root)
-        return self.maxConsecutiveLength
-
-    def findLongestConsecutive(self, root: Optional[TreeNode]) -> Dict[int, int]:
-        if not root:
-            return 0
-
-        # get local length at current node, assume it continues from L/R children
-        lengthFromLeft = self.findLongestConsecutive(root.left) + 1
-        lengthFromRight = self.findLongestConsecutive(root.right) + 1
-
-        # left does not continue from current node path, reset length
-        if root.left and root.val + 1 != root.left.val:
-            lengthFromLeft = 1
-        # right does not continue from current node path, reset length
-        if root.right and root.val + 1 != root.right.val:
-            lengthFromRight = 1
-
-        # take max between local L/R path lengths
-        maxLocalLength = max(lengthFromLeft, lengthFromRight)
-        # update global max path length with existing or new local legnth
-        self.maxConsecutiveLength = max(maxLocalLength, self.maxConsecutiveLength)
-
-        return maxLocalLength
-
 #     def longestConsecutive(self, root: Optional[TreeNode]) -> int:
 #         if not root:
 #             return 0
@@ -101,3 +69,57 @@ class Solution:
 #         lengthFromLeft["global"] = max(lengthFromLeft["local"], lengthFromLeft["global"], lengthFromRight["global"])
 
 #         return lengthFromLeft
+
+#     # simplified bottom up dfs, non thread safe
+#     maxConsecutiveLength = 0
+#     def longestConsecutive(self, root: Optional[TreeNode]) -> int:
+#         if not root:
+#             return 0
+
+#         self.findLongestConsecutive(root)
+#         return self.maxConsecutiveLength
+
+#     def findLongestConsecutive(self, root: Optional[TreeNode]) -> Dict[int, int]:
+#         if not root:
+#             return 0
+
+#         # get local length at current node, assume it continues from L/R children
+#         lengthFromLeft = self.findLongestConsecutive(root.left) + 1
+#         lengthFromRight = self.findLongestConsecutive(root.right) + 1
+
+#         # left does not continue from current node path, reset length
+#         if root.left and root.val + 1 != root.left.val:
+#             lengthFromLeft = 1
+#         # right does not continue from current node path, reset length
+#         if root.right and root.val + 1 != root.right.val:
+#             lengthFromRight = 1
+
+#         # take max between local L/R path lengths
+#         maxLocalLength = max(lengthFromLeft, lengthFromRight)
+#         # update global max path length with existing or new local legnth
+#         self.maxConsecutiveLength = max(maxLocalLength, self.maxConsecutiveLength)
+
+#         return maxLocalLength
+
+    # optimized preorder dfs with accumulator
+    def longestConsecutive(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+
+        return self.findLongestConsecutive(root, root.val - 1, 0, 0)
+
+    def findLongestConsecutive(self, root: Optional[TreeNode], parentVal: int, curLength: int, maxLength: int) -> int:
+        # return max consecutive length seen on current branch
+        if not root:
+            return maxLength
+
+        # increment current length if current node continues from parent
+        if parentVal + 1 == root.val:
+            curLength += 1
+        else:
+            curLength = 1
+
+        # update max consecutive length seen so far from root to current node
+        maxLength = max(curLength, maxLength)
+
+        return max(self.findLongestConsecutive(root.left, root.val, curLength, maxLength), self.findLongestConsecutive(root.right, root.val, curLength, maxLength))
