@@ -4,8 +4,8 @@ class Solution:
     # bfs approach
     def orangesRotting(self, grid: List[List[int]]) -> int:
         orangesToRot = collections.deque([])
-        totalFreshOranges = 0
         totalRotMins = 0
+        totalFreshOranges = 0
 
         # find all inital rotten oranges, rotting can occur in parallel from multiple cells
         for row in range(len(grid)):
@@ -24,10 +24,10 @@ class Solution:
                 row, col = orangesToRot.popleft()
 
                 # queue fresh oranges from above, below, left and right
-                for direction in directions:
-                    if self.isFreshOrangeAt(grid, row + direction[0], col + direction[1]):
-                        orangesToRot.append((row + direction[0], col + direction[1]))
-                        grid[row + direction[0]][col + direction[1]] = 2
+                for rowDir, colDir in directions:
+                    if self.isFreshOrangeAt(grid, row + rowDir, col + colDir):
+                        orangesToRot.append((row + rowDir, col + colDir))
+                        grid[row + rowDir][col + colDir] = 2
                         totalFreshOranges -= 1
 
             # another minute passed only if more adjacent oranges became rotten
