@@ -9,24 +9,24 @@ class Solution:
     # [2,3,4,5,18,17,6]
     # maxWaterArea = 16
     # currWaterArea = 12
-    # optimal two pointers (greedy)
+    # optimal greedy two pointers approach
     def maxArea(self, heights: List[int]) -> int:
-        left = 0
-        right = len(heights) - 1
+        maxArea = float("-inf")
+        leftPos, rightPos = 0, len(heights) - 1
 
-        maxWaterArea = 0
-
-        while left < right:
-            height = min(heights[left], heights[right])
-            width = right - left
-
-            # update global max water area so far
-            maxWaterArea = max(maxWaterArea, height * width)
+        # search for two heights yielding max height
+        while leftPos < rightPos:
+            # current area is bounded by shortest height
+            curArea = (rightPos - leftPos) * min(heights[leftPos], heights[rightPos])
+            maxArea = max(curArea, maxArea)
 
             # pointer with shorter height should find higher one
-            if heights[left] < heights[right]:
-                left += 1
+            #
+            # as a contradiction, since shifting the higher height will definitely not
+            # yield a larger area because the area is limited by the shorter height
+            if heights[leftPos] < heights[rightPos]:
+                leftPos += 1
             else:
-                right -= 1
+                rightPos -= 1
 
-        return maxWaterArea
+        return maxArea
