@@ -1,31 +1,55 @@
 class Solution:
-    # unoptimized bottom up DP
+#     # optimized top down dp memoized
+#     def lengthOfLIS(self, nums: List[int]) -> int:
+#         if not nums:
+#             return 0
+
+#         maxLIS = 0
+#         cache = {}
+
+#         for i in range(len(nums)):
+#             maxLIS = max(self.findMaxLIS(i, nums, cache), maxLIS)
+
+#         return maxLIS
+
+#     def findMaxLIS(self, curPos: int, nums: List[int], cache: Dict[int, int]) -> int:
+#         # once last number is reached
+#         if curPos == len(nums) - 1:
+#             return 1
+
+#         # if LIS at current number (position) is memoized
+#         if curPos in cache:
+#             return cache[curPos]
+
+#         maxLIS = 0
+
+#         # max increasing subsequence length starting at current number is
+#         # max across all larger numbers
+#         for i in range(curPos + 1, len(nums)):
+#             if nums[i] > nums[curPos]:
+#                 maxLIS = max(self.findMaxLIS(i, nums, cache), maxLIS)
+
+#         # memoize LIS for current number (position) to avoid future recomputations
+#         cache[curPos] = maxLIS + 1
+#         return cache[curPos]
+
+    # unoptimized bottom up dp
     def lengthOfLIS(self, nums: List[int]) -> int:
         if not nums:
             return 0
-        
-        # first num has subsequence of size 1
-        LISUpToNums = [1]
-        maxLIS = 1
 
-        for i in range(1, len(nums)):
-            # max LIS up to current = LIST of number < current in left sublist
-            LISUpToCurr = self.findLISBefore(nums[i], 0, i, nums, LISUpToNums) + 1
+        maxLISByPos = [1] * len(nums)
 
-            LISUpToNums.append(LISUpToCurr)
-            maxLIS = max(maxLIS, LISUpToCurr)
+        for i in range(len(nums) - 1, -1, -1):
+            # find the max increasing subsequence length across all numbers larger
+            # than current to the right
+            maxLISAhead = 0
 
-        return maxLIS
-    
-    # finds LIS out of all elements to left of currNum at toIndex and less than currNum
-    # (for currNum to succeed in increasing sequence)
-    def findLISBefore(self, currNum: int, fromIndex: int, toIndex: int, nums: List[int], LISUpToNums: List[int]) -> int:
-        # non empty sublist has at least 1 subsequence
-        maxLISBeforeCurr = 0
-        
-        for i in range(fromIndex, toIndex):
-            # replace with element < current with larger LIS up to it
-            if nums[i] < currNum:
-                maxLISBeforeCurr = max(maxLISBeforeCurr, LISUpToNums[i])
+            # take max of increasing subsequence lengths for all larger numbers
+            for j in range(i + 1, len(nums)):
+                if nums[j] > nums[i]:
+                    maxLISAhead = max(maxLISByPos[j], maxLISAhead)
 
-        return maxLISBeforeCurr
+            maxLISByPos[i] += maxLISAhead
+
+        return max(maxLISByPos)
