@@ -1,22 +1,26 @@
 class Solution:
-    # optimal hashmap, check behind
+    # optimal prefix sum approach
     def subarraySum(self, nums: List[int], k: int) -> int:
-        # account for case when first element = k (its own subarray)
-        sumsByCount = { 0: 1 }
-        sumUpToCurr, subarrayCount = 0, 0
+        # prefix sum of 0 should exist ST k complement of 0 exists when
+        # first element is k or entire array sums to k
+        prefixSumsByFreq = {0: 1}
+        currentSum = 0
+        subarraySumCount = 0
 
+        # must build prefix sums in single pass for each element to know
+        # that all existing prefix sums (potential k complements) exist
+        # before it
         for num in nums:
-            sumUpToCurr += num
+            currentSum += num
 
-            # first check if k sum complement exists as sum previously
-            # before adding current to prevent counting (curr - curr) if k = 0
-            if sumUpToCurr - k in sumsByCount:
-                subarrayCount += sumsByCount[sumUpToCurr - k]
+            # check if current number ends subarray(s) summing to k
+            kSumComplement = currentSum - k
+            if kSumComplement in prefixSumsByFreq:
+                subarraySumCount += prefixSumsByFreq[kSumComplement]
 
-            # write sum up to current in map for use by later sum
-            if sumUpToCurr not in sumsByCount:
-                sumsByCount[sumUpToCurr] = 1
-            else:
-                sumsByCount[sumUpToCurr] += 1
+            # write sum up to current number as prefix sum for next
+            if currentSum not in prefixSumsByFreq:
+                prefixSumsByFreq[currentSum] = 0
+            prefixSumsByFreq[currentSum] += 1
 
-        return subarrayCount
+        return subarraySumCount
