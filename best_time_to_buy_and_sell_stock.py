@@ -1,20 +1,19 @@
 class Solution:
-    
-    # optimal (peak and valley)
+    # optimal peak and valley approach
     def maxProfit(self, prices: List[int]) -> int:
-        maxProfitSoFar = 0
-        minPriceSoFar = float('inf')
+        maxProfit = 0
+        buyPrice = float("inf")
 
-        for currPrice in prices:
-            # each price either overtakes the min price so far
-            if currPrice < minPriceSoFar:
-                minPriceSoFar = currPrice
-            # or compares against the min price so far to take profit
+        for price in prices:
+            # reposition to smaller buy price
+            if price < buyPrice:
+                buyPrice = price
+            # otherwise take local max profit of current price against buy price
+            # and compare against global max profit
             else:
-                currProfit = currPrice - minPriceSoFar
-                maxProfitSoFar = max(maxProfitSoFar, currProfit)
-    
-        return maxProfitSoFar
+                maxProfit = max(price - buyPrice, maxProfit)
+
+        return maxProfit
 
     # test cases
     # assert maxProfit([1]) == 0
