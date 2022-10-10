@@ -1,42 +1,50 @@
 class Solution:
-    # optimized sorted and two pointers
+    # optimal sorted and two pointers approach
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        numCount = len(nums)
-        summandTriplets = []
+        tripletSummands = []
 
+        # sort to detect and skip modulating duplicate values at current anchor
         nums.sort()
 
-        for i in range(0, numCount):
-            # skip same contiguous fixed numbers (to prevent duplicate triplets since searching forwards)
+        # assume each value as first anchor (number to modulate on)
+        for i in range(0, len(nums)):
+            # avoid remodulating on number already seen (prevent duplicates of same order)
             if i > 0 and nums[i] == nums[i - 1]:
                 continue
 
-            # search all triplets starting from ith index
-            self.findSummandTriplets(i, nums, summandTriplets)
+            zeroComplement = -nums[i]
 
-        return summandTriplets
-    
-    def findSummandTriplets(self, i: int, nums: List[int], summandTriplets: List[List[int]]):
-        lowPtr = i + 1
-        highPtr = len(nums) - 1
+            # find two numbers (anchors) that sum to zero complement of first anchor
+            self.twoSum(zeroComplement, i, nums, tripletSummands)
 
-        while lowPtr < highPtr:
-            # only skip when nums[lowPtr] = nums[lowPtr - 1] after lowPtr has actually
-            # independenty moved up, not when lowPtr moves up with i
-            if nums[lowPtr] == nums[lowPtr - 1] and lowPtr - 1 != i:
-                lowPtr += 1
+        return tripletSummands
+
+    def twoSum(self, target: int, firstPos: int, nums: List[int], tripletSummands: List[List[int]]) -> None:
+        # second anchor always begins modulating after first to prevent duplicates of
+        # different order
+        leftPos = firstPos + 1
+        rightPos = len(nums) - 1
+
+        # modulate second and third anchors to find summand pair
+        while leftPos < rightPos:
+            # avoid remodulating on second number already seen
+            # (prevent duplicates of same order)
+            if leftPos > firstPos + 1 and nums[leftPos] == nums[leftPos - 1]:
+                leftPos += 1
                 continue
 
-            currSum = nums[i] + nums[lowPtr] + nums[highPtr]
+            pairSum = nums[leftPos] + nums[rightPos]
 
-            if currSum == 0:
-                summandTriplets.append([nums[i], nums[lowPtr], nums[highPtr]])
-                lowPtr += 1
-                highPtr -= 1
-            elif currSum < 0:
-                lowPtr += 1     # move up low pointer to increase sum
+            if pairSum < target:
+                leftPos += 1
+            elif pairSum > target:
+                rightPos -= 1
             else:
-                highPtr -= 1    # move down high pointer to decrease sum
+                tripletSummands.append([nums[firstPos], nums[leftPos], nums[rightPos]])
+                # both anchors must be shifted, since no other value exists on either side
+                # for both to yield target sum (continue modulating)
+                leftPos += 1
+                rightPos -= 1
 
 #     def threeSum(self, nums: List[int]) -> List[List[int]]:
 #         numsByIndex = {}
