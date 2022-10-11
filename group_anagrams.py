@@ -1,19 +1,21 @@
 class Solution:
-    # optimal anagram's letter count is key
+    # optimal hash anagram by letter frequency
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         groupedAnagrams = {}
 
         for word in strs:
             # key of anagram group is 26 digits of each char count
-            charCount = [0] * 26
+            letterFreqs = [0] * 26
 
             for char in word:
-                charCount[ord(char) - ord('a')] += 1
+                letterFreqs[ord(char) - ord('a')] += 1
 
-            if tuple(charCount) not in groupedAnagrams:
-                groupedAnagrams[tuple(charCount)] = [word]
+            letterFreqs = tuple(letterFreqs)
+
+            if letterFreqs not in groupedAnagrams:
+                groupedAnagrams[letterFreqs] = [word]
             else:
-                groupedAnagrams[tuple(charCount)].append(word)
+                groupedAnagrams[letterFreqs].append(word)
 
         return groupedAnagrams.values()
 
