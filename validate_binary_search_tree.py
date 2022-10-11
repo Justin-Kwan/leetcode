@@ -6,16 +6,15 @@
 #         self.right = right
 class Solution:
     # optimal (preorder traversal)
-    def isValidBST(self, root: TreeNode) -> bool:
-        return self.isValidSubtree(root, float('-inf'), float('inf'))
-    
-    def isValidSubtree(self, root: TreeNode, lowerBound: int, upperBound: int) -> bool:
-        if root == None:
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        return self.isValidSubtree(root, float("-inf"), float("inf"))
+
+    def isValidSubtree(self, root: Optional[TreeNode], lowerBound: int, upperBound: int) -> bool:
+        if not root:
             return True
 
-        isValidChild = lowerBound < root.val and root.val < upperBound
+        # root is out of range of parent nodes' values
+        if root.val <= lowerBound or root.val >= upperBound:
+            return False
 
-        # traverse left => current should be upper bound
-        # traverse right => current should be lower bound
-        return isValidChild and self.isValidSubtree(root.left, lowerBound, root.val) and self.isValidSubtree(root.right, root.val, upperBound)
-
+        return self.isValidSubtree(root.left, lowerBound, root.val) and self.isValidSubtree(root.right, root.val, upperBound)
