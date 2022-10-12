@@ -10,7 +10,7 @@ class Solution:
         # go through all numbers and mark as seen in corresponding index, only
         # works because each number in list have a valid index and there are no
         # negative numbers
-        # (ex. number repeated thrice looks same as number repeated once)
+        # (ex. negative number would incorrectly be detected as seen twice)
         for num in nums:
             # another number may have negated current one
             numIndex = abs(num) - 1
