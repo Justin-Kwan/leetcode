@@ -1,87 +1,48 @@
-# sliding window queue approach
-class SnakePosition:
-    def __init__(self, row: int, col: int, direction: str):
-        self.row = row
-        self.col = col
-        self.direction = direction
+ROW = 0
+COL = 1
 
-    def nextHead(self, newDirection: str):
-        match newDirection:
-            case "R":
-                return SnakePosition(self.row, self.col + 1, newDirection)
-            case "L":
-                return SnakePosition(self.row, self.col - 1, newDirection)
-            case "U":
-                return SnakePosition(self.row - 1, self.col, newDirection)
-            case "D":
-                return SnakePosition(self.row + 1, self.col, newDirection)
-            case other:
-                return self
-
-    def nextTail(self):
-        # extend tail to move in same direction as current tail block
-        match self.direction:
-            case "R":
-                return SnakePosition(self.row, self.col - 1, self.direction)
-            case "L":
-                return SnakePosition(self.row, self.col + 1, self.direction)
-            case "U":
-                return SnakePosition(self.row + 1, self.col, self.direction)
-            case "D":
-                return SnakePosition(self.row - 1, self.col, self.direction)
-            case other:
-                return self
-
+# optimal sliding window queue approach
 class SnakeGame:
     def __init__(self, width: int, height: int, food: List[List[int]]):
         self.width = width
         self.height = height
-        self.currentScore = 0
-
-        # reverse list of foods to access and pop each food at a time
-        self.foodPositions = []
-        for i in range(len(food) - 1, -1, -1):
-            self.foodPositions.append((food[i][0], food[i][1]))
-
-        self.snakePositions = collections.deque()
-        self.cachedSnakePositions = set()
+        self.curScore = 0
+        self.curFoodIndex = 0
+        self.foodPath = food
+        self.snakePath = collections.deque([(0, 0)])
+        self.cachedSnakePath = set([(0, 0)])
+        self.nextHeadMoves = {"R": (0, 1), "L": (0, -1), "U": (-1, 0), "D": (1, 0)}
 
     def move(self, direction: str) -> int:
-        # lazily set first snake position block in queue to capture initial direction
-        if len(self.cachedSnakePositions) == 0:
-            self.snakePositions.append(SnakePosition(0, 0, direction))
-            self.cachedSnakePositions.add((0, 0))
+        curTailPos = self.snakePath[-1]
+        nextHeadPos = (
+            self.snakePath[0][ROW] + self.nextHeadMoves[direction][ROW],
+            self.snakePath[0][COL] + self.nextHeadMoves[direction][COL],
+        )
 
-        nextHead = self.snakePositions[0].nextHead(direction)
+        # check if snake ran into itself but exclude it's last tail since it'll move
+        isSnakeSelfBit = nextHeadPos != self.snakePath[-1] and nextHeadPos in self.cachedSnakePath
+        isSnakeOutOfBounds = (nextHeadPos[ROW] < 0 or nextHeadPos[ROW] >= self.height or
+                              nextHeadPos[COL] < 0 or nextHeadPos[COL] >= self.width)
 
-        # remove last tail block to make space for moved head if snake is circing
-        oldTailPosition = self.snakePositions.pop()
-        self.cachedSnakePositions.remove((oldTailPosition.row, oldTailPosition.col))
-
-        # check if snake has reached out of bounds or ran into itself
-        if (not self.isPositionWithinBounds(nextHead) or
-            (nextHead.row, nextHead.col) in self.cachedSnakePositions):
+        if isSnakeOutOfBounds or isSnakeSelfBit:
             return -1
 
-        # move snake by one block position in direction
-        self.snakePositions.appendleft(nextHead)
-        self.cachedSnakePositions.add((nextHead.row, nextHead.col))
+        curFoodPos = None if self.curFoodIndex >= len(self.foodPath) else (
+            self.foodPath[self.curFoodIndex][ROW],
+            self.foodPath[self.curFoodIndex][COL],
+        )
+        # grow snake's tail by not removing last block position if ran into food
+        if nextHeadPos == curFoodPos:
+            self.curScore += 1
+            self.curFoodIndex += 1
+        # otherwise move snake tail by one block position towards direction
+        else:
+            self.snakePath.pop()
+            self.cachedSnakePath.remove(curTailPos)
 
-        # check if snake moved into a block with food
-        if self.foodPositions and (nextHead.row, nextHead.col) == self.foodPositions[-1]:
-            # extend snake at tail following same tail movement direction
-            nextTail = self.snakePositions[-1].nextTail()
-            self.snakePositions.append(nextTail)
-            self.cachedSnakePositions.add((nextTail.row, nextTail.col))
-            self.foodPositions.pop()
-            self.currentScore += 1
+        # move snake head by one block position towards direction only after tail is removed to prevent accidentally removing head in circling snake case
+        self.snakePath.appendleft(nextHeadPos)
+        self.cachedSnakePath.add(nextHeadPos)
 
-        return self.currentScore
-
-    def isPositionWithinBounds(self, position: SnakePosition) -> bool:
-        return (0 <= position.row and position.row < self.height and
-                0 <= position.col and position.col < self.width)
-
-# Your SnakeGame object will be instantiated and called as such:
-# obj = SnakeGame(width, height, food)
-# param_1 = obj.move(direction)
+        return self.curScore
