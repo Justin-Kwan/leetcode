@@ -1,40 +1,86 @@
 class Solution:
-    # optimal backwards dfs with cache
+    # optimal backwards bfs
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
-        pacificPath, atlanticPath = set(), set()
+        pacificToVisit, atlanticToVisit = collections.deque(), collections.deque()
 
-        # search water flow paths from vertical pacific and atlantic edges
+        # queue all vertical pacitic and atlantic edges to bfs from
         for row in range(len(heights)):
-            self.searchOceanPath(row, 0, heights, pacificPath)
-            self.searchOceanPath(row, len(heights[row]) - 1, heights, atlanticPath)
+            pacificToVisit.append((row, 0))
+            atlanticToVisit.append((row, len(heights[row]) - 1))
 
-        # search water flow paths from horizontal pacific and atlantic edges
+        # queue all horizontal pacitic and atlantic edges to bfs from
         for col in range(len(heights[0])):
-            self.searchOceanPath(0, col, heights, pacificPath)
-            self.searchOceanPath(len(heights) - 1, col, heights, atlanticPath)
+            pacificToVisit.append((0, col))
+            atlanticToVisit.append((len(heights) - 1, col))
 
-        # take all cells reachable from both oceans
+        pacificPath = self.searchOceanPath(heights, pacificToVisit)
+        atlanticPath = self.searchOceanPath(heights, atlanticToVisit)
         return pacificPath.intersection(atlanticPath)
 
-    def searchOceanPath(self, row: int, col: int, heights: List[List[int]], path: Set[Tuple[int, int]]):
-        # current cell can reach ocean, add to seen path
-        path.add((row, col))
+    def searchOceanPath(self, heights: List[List[int]], cellsToVisit: Deque[Tuple[int, int]]) -> Set[Tuple[int, int]]:
+        path = set()
+        while cellsToVisit:
+            row, col = cellsToVisit.popleft()
 
-        # dfs to all surrounding cells also reachable from ocean
-        for rowMove, colMove in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
-            nextRow, nextCol = row + rowMove, col + colMove
+            # reject cells that have already been visited since a cell could be queued
+            # twice by two cells in the same search layer
+            if (row, col) in path:
+                continue
+            path.add((row, col))
 
-            # out of grid bounds
-            if nextRow < 0 or nextRow >= len(heights) or nextCol < 0 or nextCol >= len(heights[row]):
-                continue
-            # water cannot flow from next cell to current
-            if heights[nextRow][nextCol] < heights[row][col]:
-                continue
-            # cell already visited and added to seen path
-            if (nextRow, nextCol) in path:
-                continue
+            # continue bfs on all surrounding cells that can reach ocean
+            for rowMove, colMove in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+                nextRow, nextCol = row + rowMove, col + colMove
+                # out of grid bounds
+                if nextRow < 0 or nextRow >= len(heights) or nextCol < 0 or nextCol >= len(heights[0]):
+                    continue
+                # water cannot flow from next cell to current
+                if heights[row][col] > heights[nextRow][nextCol]:
+                    continue
+                # next cell already visited as reachable or queued to visit
+                if (nextRow, nextCol) in path:
+                    continue
+                # cell could already be queued, queue it again and deal with later
+                cellsToVisit.append((nextRow, nextCol))
 
-            self.searchOceanPath(nextRow, nextCol, heights, path)
+        return path
+
+    # # optimal backwards dfs with cache
+    # def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+    #     pacificPath, atlanticPath = set(), set()
+
+    #     # search water flow paths from vertical pacific and atlantic edges
+    #     for row in range(len(heights)):
+    #         self.searchOceanPath(row, 0, heights, pacificPath)
+    #         self.searchOceanPath(row, len(heights[row]) - 1, heights, atlanticPath)
+
+    #     # search water flow paths from horizontal pacific and atlantic edges
+    #     for col in range(len(heights[0])):
+    #         self.searchOceanPath(0, col, heights, pacificPath)
+    #         self.searchOceanPath(len(heights) - 1, col, heights, atlanticPath)
+
+    #     # take all cells reachable from both oceans
+    #     return pacificPath.intersection(atlanticPath)
+
+    # def searchOceanPath(self, row: int, col: int, heights: List[List[int]], path: Set[Tuple[int, int]]):
+    #     # current cell can reach ocean, add to seen path
+    #     path.add((row, col))
+
+    #     # dfs to all surrounding cells also reachable from ocean
+    #     for rowMove, colMove in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+    #         nextRow, nextCol = row + rowMove, col + colMove
+
+    #         # out of grid bounds
+    #         if nextRow < 0 or nextRow >= len(heights) or nextCol < 0 or nextCol >= len(heights[row]):
+    #             continue
+    #         # water cannot flow from next cell to current
+    #         if heights[nextRow][nextCol] < heights[row][col]:
+    #             continue
+    #         # cell already visited and added to seen path
+    #         if (nextRow, nextCol) in path:
+    #             continue
+
+    #         self.searchOceanPath(nextRow, nextCol, heights, path)
 
     # # dfs with cache
     # def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
