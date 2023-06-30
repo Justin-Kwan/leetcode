@@ -12,7 +12,7 @@ class Solution:
         while leftPos <= rightPos:
             # decide water height at each left position until the max left 
             # height is taller than max right so far
-            # (stall and try finding  taller block on right side)
+            # (stall and try finding taller block on right side)
             if maxLeftHeight <= maxRightHeight:
                 curWaterCount = maxLeftHeight - heights[leftPos]
                 trappedWaterCount += max(0, curWaterCount)
