@@ -38,13 +38,13 @@ class Codec:
         nodesToVisit = collections.deque([root])
 
         while nodesToVisit and curNodePos < len(nodeValues) - 1:
-            # pop off current node and construct its children by looking 
-            # ahead to check whether they exist or are null rather than
-            # pre-emptively constructing children that may be null
+            # look-ahead and construct children of current node to check
+            # whether they exist or are null rather than pre-emptively
+            # constructing children that may be null
             curNode = nodesToVisit.popleft()
 
             # construct and add children to current node, then queue them
-            # to be attached later (without revisiting null children)
+            # to construct their children later (skipping null children)
             if nodeValues[curNodePos + 1] != "N":
                 curNode.left = TreeNode(nodeValues[curNodePos + 1])
                 nodesToVisit.append(curNode.left)
