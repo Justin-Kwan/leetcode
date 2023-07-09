@@ -25,14 +25,12 @@ class Codec:
         self.serializeNodes(root.right, encodedTree)
 
     def deserialize(self, data: str) -> TreeNode:
-        if data == "N":
-            return None
-
         nodeValues = collections.deque(data.split(","))
         return self.deserializeNodes(nodeValues)
 
-    def deserializeNodes(self, nodeValues) -> TreeNode:
-        # pop each current visited root node value whether exists or null
+    def deserializeNodes(self, nodeValues: List[str]) -> TreeNode:
+        # pop each current root node value whether exists or null to indicate
+        # as visited
         curNodeVal = nodeValues.popleft()
 
         # finally reached a null encoded node value
@@ -40,7 +38,7 @@ class Codec:
             return None
 
         # construct current parent node, then construct and attach left and
-        # right constructred subtrees in preorder traversal
+        # right subtrees in preorder traversal
         curNode = TreeNode(int(curNodeVal))
         curNode.left = self.deserializeNodes(nodeValues)
         curNode.right = self.deserializeNodes(nodeValues)
