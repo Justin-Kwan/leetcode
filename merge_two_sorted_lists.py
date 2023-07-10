@@ -4,33 +4,26 @@
 #         self.val = val
 #         self.next = next
 class Solution:
-    # optimal
-    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+    # optimal merge heads approach
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        curHead = mergedHead = ListNode(-1)
 
-        currNode1 = l1
-        currNode2 = l2
-
-        dummyHead = ListNode(0, None)
-        dummyHeadRef = dummyHead
-        
-        while currNode1 is not None and currNode2 is not None:
-
-            if currNode1.val < currNode2.val:
-                dummyHead.next = currNode1
-                currNode1 = currNode1.next
+        # keep merging while both lists still have nodes
+        while list1 and list2:
+            if list1.val < list2.val:
+                curHead.next = list1
+                list1 = list1.next
             else:
-                dummyHead.next = currNode2
-                currNode2 = currNode2.next
+                curHead.next = list2
+                list2 = list2.next
 
-            dummyHead = dummyHead.next
-        
-        # at this point, at least one node is null
-        if currNode1 is None:
-            dummyHead.next = currNode2
-        if currNode2 is None:
-            dummyHead.next = currNode1
+            curHead = curHead.next
 
-        return dummyHeadRef.next
+        # add rest of a list's nodes to merged list once other is exhausted
+        # since they're larger (usual case of one node left in one list)
+        curHead.next = list2 if not list1 else list1
+
+        return mergedHead.next
 
 # test cases:
 
