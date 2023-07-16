@@ -6,7 +6,7 @@ class Solution:
 
         matchingExpressions = []
 
-        def searchExpressions(termStartPos: int, curPath, curTotal: int, lastTermApplied: int):
+        def searchExpressions(termStartPos: int, curPath: str, curTotal: int, lastTermApplied: int):
             # reached leaf node of last term in expression, add expressions that
             # yield target value
             if termStartPos >= len(num):
@@ -39,7 +39,7 @@ class Solution:
                 extendedProduct = lastTermApplied * nextTerm
                 searchExpressions(termEndPos + 1, curPath + '*' + str(nextTerm), correctedTotal, extendedProduct)
 
-        searchExpressions(0, '', 0, 0)
+        searchExpressions(0, "", 0, 0)
         return matchingExpressions
 
     # # optimal backtracking approach
