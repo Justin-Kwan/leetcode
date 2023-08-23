@@ -4,7 +4,7 @@ class Solution:
         if not points:
             return 0
 
-        # sort all ballon intervals by start positions to compare overlaps
+        # sort all balloon intervals by start positions to compare overlaps
         sortedPoints = sorted(points, key=lambda point: point[0])
         arrowCount = 0
         overlapEnd = sortedPoints[0][1]
