@@ -1,73 +1,105 @@
-from enum import Enum
-
-class SearchResult(Enum):
-    WORD = 1
-    PREFIX = 2
-    MISSING = 3
-
 class TrieNode:
-    def __init__(self, value: str = ""):
-        self._verifyValue(value)
-        self._value = value
+    def __init__(self):
         self._children = [None] * 26
         self.isLast = False
 
-    def addChild(self, child) -> None:
-        childPos = ord(child._value) - ord('a')
+    def addChild(self, child: 'TrieNode', value: str) -> None:
+        childPos = self._childPos(value)
         if not self._children[childPos]:
             self._children[childPos] = child
 
-    def getChild(self, value: str):
-        self._verifyValue(value)
-        return self._children[ord(value) - ord('a')]
+    def getChild(self, value: str) -> Optional['TrieNode']:
+        return self._children[self._childPos(value)]
 
-    def _verifyValue(self, value: str) -> None:
+    def _childPos(self, value: str) -> int:
         if len(value) > 1 or (value and not value.isalpha()):
             raise Exception("trie node value must be a letter")
+        return ord(value) - ord('a')
 
-# recursive approach
+# iterative approach
 class Trie:
     def __init__(self):
         self.root = TrieNode()
 
     def insert(self, word: str) -> None:
-        self.insertWord(self.root, word, 0)
+        curNode = self.root
+        for nextChar in word:
+            # lookup next character child node, create and add if not exists
+            child = curNode.getChild(nextChar)
+            if not child:
+                child = TrieNode()
+                curNode.addChild(child, nextChar)
+            curNode = child
 
-    def insertWord(self, curNode: TrieNode, word: str, curPos: int) -> None:
-        # all characters in word have been inserted or already exist as nodes,
-        # flag current node as last character of word
-        if curPos >= len(word):
-            curNode.isLast = True
-            return
-
-        # lookup next character as child of current node, create and add to
-        # current node if does not exist
-        child = curNode.getChild(word[curPos])
-        if not child:
-            child = TrieNode(word[curPos])
-            curNode.addChild(child)
-
-        self.insertWord(child, word, curPos + 1)
+        # mark last character node as last in word path
+        curNode.isLast = True
 
     def search(self, word: str) -> bool:
-        return self.searchWord(self.root, word, 0) == SearchResult.WORD
+        charNode = self.searchPath(word)
+        return charNode and charNode.isLast
 
     def startsWith(self, prefix: str) -> bool:
-        search = self.searchWord(self.root, prefix, 0)
-        # any word in trie is definitely a prefix
-        return search == SearchResult.PREFIX or search == SearchResult.WORD
+        # any word in trie is always a prefix of itself
+        charNode = self.searchPath(prefix)
+        return charNode != None
 
-    def searchWord(self, curNode: TrieNode, word: str, curPos: int) -> SearchResult:
-        # all word characters are in trie, check if word ends here or is prefix
-        if curPos >= len(word):
-            return SearchResult.WORD if curNode.isLast else SearchResult.PREFIX
+    def searchPath(self, word: str) -> Optional[TrieNode]:
+        curNode = self.root
+        for nextChar in word:
+            # word not in trie and not prefix if next character not in trie
+            child = curNode.getChild(nextChar)
+            if not child:
+                return None
+            curNode = child
 
-        # word not in trie if next character not child of current node
-        child = curNode.getChild(word[curPos])
-        if not child:
-            return SearchResult.MISSING
+        # word is either in trie or a prefix of another
+        return curNode
 
-        return self.searchWord(child, word, curPos + 1)
+
+# # recursive approach
+# class Trie:
+#     def __init__(self):
+#         self.root = TrieNode()
+
+#     def insert(self, word: str) -> None:
+#         self.insertWord(self.root, word, 0)
+
+#     def insertWord(self, curNode: TrieNode, word: str, nextPos: int) -> None:
+#         # all characters in word have been inserted or already exist as nodes,
+#         # flag current node as last character of word
+#         if nextPos >= len(word):
+#             curNode.isLast = True
+#             return
+
+#         # lookup next character as child of current node, create and add to
+#         # current node if does not exist
+#         child = curNode.getChild(word[nextPos])
+#         if not child:
+#             child = TrieNode()
+#             curNode.addChild(child, word[nextPos])
+
+#         self.insertWord(child, word, nextPos + 1)
+
+#     def search(self, word: str) -> bool:
+#         charNode = self.searchPath(self.root, word, 0)
+#         return charNode != None and charNode.isLast
+
+#     def startsWith(self, prefix: str) -> bool:
+#         # any word in trie is always a prefix of itself
+#         charNode = self.searchPath(self.root, prefix, 0)
+#         return charNode != None
+
+#     def searchPath(self, curNode: TrieNode, word: str, nextPos: int) -> Optional[TrieNode]:
+#         # all word characters are in trie, check if word ends here or is prefix
+#         if nextPos >= len(word):
+#             return curNode
+
+#         # word not in trie if next character not child of current node
+#         child = curNode.getChild(word[nextPos])
+#         if not child:
+#             return None
+
+#         return self.searchPath(child, word, nextPos + 1)
 
 # Your Trie object will be instantiated and called as such:
 # obj = Trie()
