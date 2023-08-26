@@ -16,7 +16,7 @@ class TrieNode:
             raise Exception("trie node value must be a letter")
         return ord(value) - ord('a')
 
-# iterative approach
+# optimal iterative approach
 class Trie:
     def __init__(self):
         self.root = TrieNode()
