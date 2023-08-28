@@ -10,7 +10,7 @@ class Solution:
         maxPathSum, _ = self.maxPathSumUnder(root)
         return maxPathSum
 
-    def maxPathSumUnder(self, root: Optional[TreeNode]) -> Tuple[int, int]:
+    def maxPathSumUnder(self, root: Optional[TreeNode]) -> tuple[int, int]:
         # prevent negative nodes from reporting sums of 0 since null nodes
         # have no paths or branches
         if not root:
