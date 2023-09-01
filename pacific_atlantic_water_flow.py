@@ -62,7 +62,7 @@ class Solution:
     #     # take all cells reachable from both oceans
     #     return pacificPath.intersection(atlanticPath)
 
-    # def searchOceanPath(self, row: int, col: int, heights: List[List[int]], path: Set[Tuple[int, int]]):
+    # def searchOceanPath(self, row: int, col: int, heights: List[List[int]], path: set[tuple[int, int]]):
     #     # current cell can reach ocean, add to seen path
     #     path.add((row, col))
 

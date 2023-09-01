@@ -59,7 +59,7 @@ class Solution:
 
     #     return componentCount
 
-    # def searchComponent(self, node: int, graph: Dict[int, List[int]], visited: Set[int]):
+    # def searchComponent(self, node: int, graph: dict[int, List[int]], visited: set[int]):
     #     # reached a node already visited
     #     if node in visited:
     #         return

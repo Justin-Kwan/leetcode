@@ -18,7 +18,7 @@ class Solution:
         # ensure no cycles exists and all nodes are reachable (non-disjoint)
         return isCycleFree and len(visitedNodes) == n
 
-    def isCycleFreeGraph(self, node: int, prevNode: int, visitedNodes: Set[int], graph: Dict[int, int]) -> bool:
+    def isCycleFreeGraph(self, node: int, prevNode: int, visitedNodes: set[int], graph: dict[int, int]) -> bool:
         # already visited node means a cycle exists
         if node in visitedNodes:
             return False
