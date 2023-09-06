@@ -23,6 +23,7 @@ class Solution:
                     # '1' cell seen if no tigher bound from above exists
                     minLeftBounds[col] = max(minLeftBound, minLeftBounds[col])
                 else:
+                    # move onto next first '1' cell of rectangle seperated by '0's
                     minLeftBounds[col] = float('-inf')
                     minLeftBound = col + 1
 
@@ -34,6 +35,7 @@ class Solution:
                     # '1' cell seen if no tigher bound from above exists
                     maxRightBounds[col] = min(maxRightBound, maxRightBounds[col])
                 else:
+                    # move onto next first '1' cell of rectangle seperated by '0's
                     maxRightBounds[col] = float('inf')
                     maxRightBound = col - 1
 
