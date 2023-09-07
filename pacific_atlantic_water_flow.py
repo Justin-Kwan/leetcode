@@ -3,12 +3,12 @@ class Solution:
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
         pacificToVisit, atlanticToVisit = collections.deque(), collections.deque()
 
-        # queue all vertical pacitic and atlantic edges to bfs from
+        # queue all vertical pacific and atlantic edges to bfs from
         for row in range(len(heights)):
             pacificToVisit.append((row, 0))
             atlanticToVisit.append((row, len(heights[row]) - 1))
 
-        # queue all horizontal pacitic and atlantic edges to bfs from
+        # queue all horizontal pacific and atlantic edges to bfs from
         for col in range(len(heights[0])):
             pacificToVisit.append((0, col))
             atlanticToVisit.append((len(heights) - 1, col))
