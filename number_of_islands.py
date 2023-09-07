@@ -9,7 +9,6 @@ class Solution:
         colCount = len(grid[0])
 
         islandCount = 0
-        visitedIslandCells = set()
 
         for rowPos in range(0, rowCount):
             for colPos in range(0, colCount):

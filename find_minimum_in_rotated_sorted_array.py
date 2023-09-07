@@ -1,27 +1,43 @@
 class Solution:
-    #  L                       R
-    # [3, 4, 5, 6, 7, 8, 9, 1, 2]
-    #  L                       R
-    # [9, 1, 2, 3, 4, 5, 6, 7, 8]
+    # right cross left pointer approach
     def findMin(self, nums: List[int]) -> int:
-        lastIndex = len(nums) - 1
-        
-        # hadle case of non-rotated list
-        if nums[0] < nums[lastIndex]:
-            return nums[0]
+        if not nums:
+            return -1
 
-        leftPtr = 0
-        rightPtr = len(nums) - 1
+        # binary search until smallest pivot element found once left
+        # pointer reached it and right pointer crosses left
+        left, right = 0, len(nums) - 1
+        while left <= right:
+            middle = (left + right) // 2
+            # middle in left un-rotated side so move it closer to pivot
+            if nums[middle] >= nums[0]:
+                left = middle + 1
+            # middle in right rotated side so move it closer to pivot
+            else:
+                right = middle - 1
 
-        while leftPtr < rightPtr:
-            midPtr = (leftPtr + rightPtr) // 2
+        # left pointer will have exhausted past last index if not rotated
+        return nums[left] if left < len(nums) else nums[0]
 
-            # middle value is left of decrease (on left sequence)
-            if nums[midPtr] >= nums[0]:
-                leftPtr = midPtr + 1
+    # # left reach right pointer approach
+    # def findMin(self, nums: List[int]) -> int:
+    #     if not nums:
+    #         return -1
 
-            # middle value is right of decrease (on right sequence)
-            if nums[midPtr] < nums[lastIndex]:
-                rightPtr = midPtr
+    #     # minimum is first if not rotated
+    #     if nums[0] < nums[-1]:
+    #         return nums[0]
 
-        return nums[leftPtr]
+    #     # binary search until smallest pivot element found once left
+    #     # and right pointers both reach it
+    #     left, right = 0, len(nums) - 1
+    #     while left < right:
+    #         middle = (left + right) // 2
+    #         # middle in left un-rotated side so move it closer to pivot
+    #         if nums[middle] >= nums[0]:
+    #             left = middle + 1
+    #         # middle in right rotated side so move it closer to pivot
+    #         else:
+    #             right = middle
+
+    #     return nums[left]
