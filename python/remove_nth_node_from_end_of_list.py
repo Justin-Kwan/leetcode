@@ -50,7 +50,7 @@ class Solution:
         slowPtr.next = slowPtr.next.next
         return head
 
-    # optomized
+    # optimized
     def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
         headPtr = ListNode(0, head)
         tailPtr = headPtr
