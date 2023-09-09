@@ -6,26 +6,26 @@ public:
             return -1;
         }
 
-        int slow = 0, fast = 0;
+        int slowPos = 0, fastPos = 0;
         // first find node where fast pointer reaches slow in cycle
         // (which always exists)
         do {
-            slow = nums[slow];
-            fast = nums[nums[fast]];
-        } while (slow != fast);
+            slowPos = nums[slowPos];
+            fastPos = nums[nums[fastPos]];
+        } while (slowPos != fastPos);
 
         // find duplicate number at first "node" of cycle, which is always
         // same distance from collision "node" as from list head (slow finds
         // first cycle "node" from head again)
-        slow = 0;
-        while (slow != fast) {
-            fast = nums[fast];
-            slow = nums[slow];
+        slowPos = 0;
+        while (slowPos != fastPos) {
+            fastPos = nums[fastPos];
+            slowPos = nums[slowPos];
         }
 
         // duplicate number is always first "node" of cycle since it points
         // to other indexes of numbers which will eventually point back
-        return slow;
+        return slowPos;
     }
 
     // // optimal modify array approach
