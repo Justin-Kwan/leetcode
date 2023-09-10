@@ -49,7 +49,7 @@ class Solution:
         successorsToVisit = collections.deque([])
 
         # count number of prerequisites (inbound edges) per each course and
-        # build graph o course by successor course adjacency list
+        # build graph of course by successor course adjacency list
         for course, prereqCourse in prerequisites:
             courseIndegrees[course] += 1
             courseBySuccessors[prereqCourse].append(course)
