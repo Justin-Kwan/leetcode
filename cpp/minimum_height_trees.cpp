@@ -12,7 +12,7 @@ public:
         unordered_map<int, vector<int>> tree;
 
         // construct hashmap undirected graph of nodes by adjacencies where each node contains
-        // its children and parent, count the number of inbound edges for each node
+        // its children and parent, count the number of total edges for each node
         for (auto &edge : edges) {
             tree[edge[0]].push_back(edge[1]);
             tree[edge[1]].push_back(edge[0]);
@@ -72,7 +72,7 @@ public:
 //         vector<int> minHeightRoots;
 
 //         // construct hashmap undirected graph of nodes by adjacencies where each node contains
-//         // its children and parent, count the number of inbound edges for each node
+//         // its children and parent, count the number of total edges for each node
 //         for (auto &edge : edges) {
 //             tree[edge[0]].push_back(edge[1]);
 //             tree[edge[1]].push_back(edge[0]);

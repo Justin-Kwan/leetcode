@@ -16,12 +16,11 @@ class Solution:
         for char in t:
             if char not in charsByCount:
                 return False
-            else:
-                charsByCount[char] -= 1
 
-        # verify that all characters have a count of 0 in map
-        for char in charsByCount:
+            charsByCount[char] -= 1
             if charsByCount[char] < 0:
                 return False
 
+        # length of t and s is same up to here, do not need to check if
+        # t had less letters than s (any letter frequencies >= 1)
         return True
