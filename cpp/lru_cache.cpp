@@ -44,7 +44,7 @@ public:
     }
 
     int get(int key) {
-        if (this->keyValues.find(key) == this->keyValues.end()) {
+        if (keyValues.find(key) == this->keyValues.end()) {
             return -1;
         }
 

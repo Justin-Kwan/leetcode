@@ -28,7 +28,7 @@ class Solution:
     def mergeTwoLists(self, list1: List[Optional[ListNode]], list2: List[Optional[ListNode]]) -> Optional[ListNode]:
         mergedHead = curHead = ListNode(-1)
 
-        # keep merging while both lits still have nodes
+        # keep merging while both lists still have nodes
         while list1 and list2:
             if list1.val < list2.val:
                 curHead.next = list1
