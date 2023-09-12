@@ -6,9 +6,9 @@ public:
             return -1;
         }
 
-        int slowPos = 0, fastPos = 0;
         // first find node where fast pointer reaches slow in cycle
         // (which always exists)
+        int slowPos = 0, fastPos = 0;
         do {
             slowPos = nums[slowPos];
             fastPos = nums[nums[fastPos]];
