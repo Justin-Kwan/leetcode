@@ -14,7 +14,7 @@ class Solution:
         maxArea = float("-inf")
         leftPos, rightPos = 0, len(heights) - 1
 
-        # search for two heights yielding max height
+        # search for two heights yielding max area
         while leftPos < rightPos:
             # current area is bounded by shortest height
             curArea = (rightPos - leftPos) * min(heights[leftPos], heights[rightPos])
