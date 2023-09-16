@@ -58,21 +58,19 @@ class Solution:
         while nodesToVisit:
             # take size snapshot of current level
             levelSize = len(nodesToVisit)
-            
             # copy level's node values to result set
-            levelNodeValues = []
-            for node in nodesToVisit:
-                levelNodeValues.append(node.val)
-
-            nodesByLevel.append(levelNodeValues)
+            nodeLevelValues = []
 
             # replace current level up to snapshot size with next level's nodes
-            for _ in range(0, levelSize):
-                currNode = nodesToVisit.popleft()
+            for _ in range(levelSize):
+                curNode = nodesToVisit.popleft()
+                nodeLevelValues.append(curNode.val)
 
-                if currNode.left:
-                    nodesToVisit.append(currNode.left)
-                if currNode.right:
-                    nodesToVisit.append(currNode.right)
+                if curNode.left:
+                    nodesToVisit.append(curNode.left)
+                if curNode.right:
+                    nodesToVisit.append(curNode.right)
+
+            nodesByLevel.append(nodeLevelValues)
 
         return nodesByLevel
