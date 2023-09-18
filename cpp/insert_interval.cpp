@@ -31,7 +31,7 @@ public:
             // new interval falls before current one, add it and remaining intervals
             if (newInterval[1] < intervals[i][0]) {
                 mergedIntervals.push_back(newInterval);
-                vector<vector<int>> rest = {intervals.begin() + i, intervals.end()};
+                vector<vector<int>> rest = { intervals.begin() + i, intervals.end() };
                 mergedIntervals.insert(mergedIntervals.end(), rest.begin(), rest.end());
                 return mergedIntervals;
             }

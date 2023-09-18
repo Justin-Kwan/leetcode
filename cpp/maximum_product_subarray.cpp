@@ -68,7 +68,7 @@ public:
             Integer num = Integer(nums[i]);
             // negative number should consider itself multiplied against
             // minimum subarray product up to previous to obtain max product
-            // up to itself (since negative * negative > negative * positive)
+            // up to itself (since negative * negative > negative * position)
             if (num < Integer(0)) {
                 swap(curMaxProduct, curMinProduct);
             }
@@ -82,4 +82,33 @@ public:
 
         return maxProduct.integer();
     }
+
+    // // brute force recursive approach
+    // int maxProduct(vector<int> &nums) {
+    //     Integer maxProduct = Integer(INT_MIN);
+
+    //     for (int i = 0; i < nums.size(); ++i) {
+    //         auto [curMaxProduct, _] = maxProductFrom(nums, i);
+    //         maxProduct = max(curMaxProduct, maxProduct);
+    //     }
+    //     return maxProduct.integer();
+    // }
+
+    // pair<Integer, Integer> maxProductFrom(vector<int> &nums, int pos) {
+    //     if (pos >= nums.size()) {
+    //         return { Integer(1), Integer(1) };
+    //     }
+
+    //     Integer num = Integer(nums[pos]);
+    //     auto [nextMaxProduct, nextMinProduct] = maxProductFrom(nums, pos + 1);
+    //     // negative number should multiply against min product from next and
+    //     // positive number should multiply against max product from next to
+    //     // obtain max product from current
+    //     if (num < Integer(0)) {
+    //         swap(nextMinProduct, nextMaxProduct);
+    //     }
+
+    //     // max product from current number is minimum or maxmimum product so far
+    //     return { max(nextMaxProduct * num, num), min(nextMinProduct * num, num) };
+    // }
 };
