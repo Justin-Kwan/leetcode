@@ -36,7 +36,7 @@ public:
 
     Integer operator * (const Integer &other) const {
         // product is zero if either Integer is zero
-        if (!this->sign || !other.sign) {
+        if (this->sign == 0 || other.sign == 0) {
             return Integer(0, 0);
         }
         // log rule states that log(x * y) = log(x) + log(y)
@@ -68,11 +68,13 @@ public:
             Integer num = Integer(nums[i]);
             // negative number should consider itself multiplied against
             // minimum subarray product up to previous to obtain max product
-            // up to itself (since negative * negative > negative * position)
+            // up to itself (since negative * negative > negative * positive)
             if (num < Integer(0)) {
                 swap(curMaxProduct, curMinProduct);
             }
 
+            // subarray max/min product ending at current number is either itself
+            // or itself multiplied by max product at previous (avoid recomputing)
             curMaxProduct = max(curMaxProduct * num, num);
             curMinProduct = min(curMinProduct * num, num);
             maxProduct = max(maxProduct, curMaxProduct);
