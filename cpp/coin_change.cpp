@@ -1,6 +1,6 @@
 class Solution {
 public:
-    // bottom up dp approach
+    // optimal bottom up dp approach
     int coinChange(vector<int> &coins, int amount) {
         // build up solution of minimum coins needed to make each amount, default to not
         // possible initially and zero coins trivially needed to make amount of 0
@@ -30,7 +30,7 @@ public:
         return minCoins == INT_MAX ? -1 : minCoins;
     }
 
-    // // top down dp approach
+    // // optimal top down dp approach
     // int coinChange(vector<int> &coins, int amount) {
     //     // cache minimum number of coins needed to make each unique amount
     //     unordered_map<int, int> cache;
