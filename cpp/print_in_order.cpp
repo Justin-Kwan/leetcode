@@ -19,8 +19,8 @@ public:
         ++print_turn;
 
         // notify all threads in order to guarantee that second one wakes up
-        print_lock.unlock();
         printed_cv.notify_all();
+        print_lock.unlock();
     }
 
     void second(function<void()> printSecond) {
@@ -32,8 +32,8 @@ public:
         ++print_turn;
 
         // only need to notify remaining sleeping third thread left to print
-        print_lock.unlock();
         printed_cv.notify_one();
+        print_lock.unlock();
     }
 
     void third(function<void()> printThird) {
